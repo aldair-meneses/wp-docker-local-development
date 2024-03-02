@@ -8,7 +8,7 @@ First, create the `.env` file from he `.env.sample`.
 cp .env.sample .env
 ```
 
-Run the following commands to download the docker images e start the environment
+Run the following commands to download the docker images and start the environment
 
 ```sh
 docker compose build --pull
@@ -19,7 +19,7 @@ Then, access `localhost` and you will be redirected to the page for the WordPres
 
 ## Using WP-CLI
 
-For use the WP-ClI, just run the wp service with a command to execute an action of your wish.
+For use the WP-CLI, just run the wp service with a command to execute an action of your wish.
 
 E.g: To install WooCommerce Plugin using WP-CLI
 
