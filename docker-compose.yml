@@ -12,6 +12,7 @@ services:
     restart: always
   
   db:
+    user: "$HOST_USER_ID:$HOST_GROUP_ID"
     image: mariadb:11.2
     volumes:
       - ./data:/var/lib/mysql
@@ -35,13 +36,15 @@ services:
   cli:
     image: wordpress:cli
     user: "$HOST_USER_ID:$HOST_GROUP_ID"
+    depends_on:
+      - db
     command: >
       /bin/sh -c '
-      sleep 10;
       wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=db:3306 --path=/var/www/html;
       '
     volumes:
       - ./wordpress:/var/www/html
-      - ./src:/var/www/html/wp-content/plugins
-      - ./src:/var/www/html/wp-content/themes
-    working_dir: /var/www/html/wordpress
+      - ./src:/var/www/html/wp-content
+      - ./src/plugins:/var/www/html/wp-content/plugins
+      - ./src/themes:/var/www/html/wp-content/themes
+    working_dir: /var/www/html
