@@ -15,7 +15,7 @@ docker compose build --pull
 docker compose up -d
 ```
 
-Then, acess `localhost` and you will be redirect to the page for the WordPress instalation.
+Then, access `localhost` and you will be redirected to the page for the WordPress installation.
 
 ## Using WP-CLI
 
@@ -24,5 +24,5 @@ For use the WP-ClI, just run the wp service with a command to execute an action 
 E.g: To install WooCommerce Plugin using WP-CLI
 
 ```sh
-docker compose run -u $(id -u):$(id -g) --rm wp plugin install woocommerce
+docker compose run -u $(id -u):$(id -g) --rm cli plugin install woocommerce
 ```
