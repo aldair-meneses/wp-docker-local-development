@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  server:
+    image: nginx:latest
+    volumes:
+      - ./wordpress:/var/www/html
+      - ./src:/var/www/html/wp-content
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+    restart: always
+    user: "$HOST_USER_ID:$HOST_GROUP_ID"
+  
+  db:
+    image: mariadb:11.2
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    ports:
+      - 3306:3306
+
+  php:
+    build: 
+      context: ./docker/php
+      
+    user: "$HOST_USER_ID:$HOST_GROUP_ID"
+    volumes:
+      - ./wordpress:/var/www/html
+      - ./src:/var/www/html/wp-content
+
+  cli:
+    image: wordpress:cli
+    user: "$HOST_USER_ID:$HOST_GROUP_ID"
+    command: >
+      /bin/sh -c '
+      sleep 10;
+      wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=db:3306 --path=/var/www/html;
+      '
+    volumes:
+      - ./wordpress:/var/www/html
+      - ./src:/var/www/html/wp-content/plugins
+      - ./src:/var/www/html/wp-content/themes
+    working_dir: /var/www/html
