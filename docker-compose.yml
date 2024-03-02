@@ -10,7 +10,6 @@ services:
     ports:
       - 80:80
     restart: always
-    user: "$HOST_USER_ID:$HOST_GROUP_ID"
   
   db:
     image: mariadb:11.2
@@ -45,4 +44,4 @@ services:
       - ./wordpress:/var/www/html
       - ./src:/var/www/html/wp-content/plugins
       - ./src:/var/www/html/wp-content/themes
-    working_dir: /var/www/html
+    working_dir: /var/www/html/wordpress
