@@ -1,50 +1,44 @@
-version: '3'
-
 services:
+
+  php:
+    build: 
+      context: ./docker/php
+    volumes:
+      - ./wordpress:/var/www/html:rw,cached
+      - ./src/plugins:/var/www/html/wp-content/plugins
+      - ./src/themes:/var/www/html/wp-content/themes
+    ports:
+      - "9000:9000"
+
   server:
     image: nginx:latest
     volumes:
       - ./wordpress:/var/www/html
-      - ./src:/var/www/html/wp-content
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     ports:
       - 80:80
     restart: always
   
   db:
-    user: "$HOST_USER_ID:$HOST_GROUP_ID"
     image: mariadb:11.2
     volumes:
       - ./data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpress
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
     ports:
       - 3306:3306
-
-  php:
-    build: 
+  
+  wp:
+    build:
       context: ./docker/php
-      
-    user: "$HOST_USER_ID:$HOST_GROUP_ID"
+      target: cli
+    user: "${HOST_USER_ID}:${HOST_GROUP_ID}"
     volumes:
       - ./wordpress:/var/www/html
       - ./src:/var/www/html/wp-content
-
-  cli:
-    image: wordpress:cli
-    user: "$HOST_USER_ID:$HOST_GROUP_ID"
-    depends_on:
-      - db
-    command: >
-      /bin/sh -c '
-      wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=db:3306 --path=/var/www/html;
-      '
-    volumes:
-      - ./wordpress:/var/www/html
-      - ./src:/var/www/html/wp-content
-      - ./src/plugins:/var/www/html/wp-content/plugins
-      - ./src/themes:/var/www/html/wp-content/themes
+    entrypoint: ["wp"]
+    tty: true
     working_dir: /var/www/html
