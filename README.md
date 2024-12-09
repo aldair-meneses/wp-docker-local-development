@@ -15,7 +15,7 @@ docker compose build --pull
 docker compose up -d
 ```
 
-Run the followings command to give me permissions to host and set db credentials
+Run the followings command to set host permissions and db credentials
 
 ```sh
 sudo chown -R $(id -u):$(id -g) wordpress/
@@ -33,5 +33,5 @@ For use the WP-CLI, just run the wp service with a command to execute an action 
 E.g: To install WooCommerce Plugin using WP-CLI
 
 ```sh
-docker compose run -u $(id -u):$(id -g) --rm cli plugin install woocommerce
+docker compose run -u $(id -u):$(id -g) --rm wp plugin install woocommerce
 ```
