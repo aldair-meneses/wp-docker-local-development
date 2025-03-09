@@ -21,8 +21,6 @@ services:
   
   db:
     image: mariadb:11.2
-    volumes:
-      - ./data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
       MYSQL_DATABASE: "${MYSQL_DATABASE}"
